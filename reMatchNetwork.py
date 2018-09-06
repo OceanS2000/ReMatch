@@ -1,11 +1,12 @@
 from __future__ import print_function
 from ortools.graph import pywrapgraph
 from enum import Enum, unique
+from copy import deepcopy
 
 
 @unique
 class NodeType(Enum):
-    # TODO: support for more type of supplys
+    # TODO: support for more type of supply
     Battery = 0
     Solar = 2
     BioMass = 3
@@ -35,6 +36,14 @@ class reMatchNetwork:
 
         self.supplyProfiles = supplyProfiles
         self.supplyCosts = supplyCosts
+
+    def __deepcopy__(self, memodict={}):
+        cls = self.__class__
+        newone = cls.__new__(cls)
+        memodict[id(self)] = newone
+        for k, v in self.__dict__.items():
+            setattr(newone, k, deepcopy(v, memodict))
+        return newone
 
     def addSupply(self, typeOfSupply):
         supplySerial = self.numberOfSupply[typeOfSupply]
